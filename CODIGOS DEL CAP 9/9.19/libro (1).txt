@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+/* Structure definition */
+typedef struct {
+    int matricula;
+    char nombre[20];
+    int carrera;
+    float promedio;
+} alumno;
+
+/* Function prototype */
+void ordena(FILE *, FILE *);
+
+/* Main function */
+void main(void) {
+    FILE *ar1, *ar2;
+    
+    /* Open files for reading and writing */
+    ar1 = fopen("ad5.dat", "rb");  // Open for binary reading
+    ar2 = fopen("ad6.dat", "wb");  // Open for binary writing
+    
+    /* Check if files opened successfully */
+    if (ar1 != NULL && ar2 != NULL) {
+        /* Call function to sort and write to ar2 */
+        ordena(ar1, ar2);
+        
+        /* Close both files */
+        fclose(ar1);
+        fclose(ar2);
+    } else {
+        printf("\nEl o los archivos no se pudieron abrir\n");
+    }
+}
+
+/* Function to sort records by matricula in descending order */
+void ordena(FILE *ap1, FILE *ap2) {
+    alumno alu;
+    int t, n, i;
+    
+    t = sizeof(alumno);  // Size of each record
+    
+    /* Move to the end of the file to determine number of records */
+    fseek(ap1, 0, SEEK_END);
+    n = ftell(ap1) / t;  // Number of records
+    
+    /* Rewind to start reading from the beginning */
+    rewind(ap1);
+    
+    /* Process records in descending order */
+    for (i = n - 1; i >= 0; i--) {
+        fseek(ap1, i * t, SEEK_SET);
+        fread(&alu, sizeof(alumno), 1, ap1);  // Read record
+        fwrite(&alu, sizeof(alumno), 1, ap2); // Write record to ap2
+    }
+}

@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <ctype.h>
+
+/* Prototipo de función */
+void minymay(FILE *);
+
+/* Función principal */
+void main(void) {
+    FILE *ar;
+
+    /* Abre el archivo "arc5.txt" en modo lectura */
+    if ((ar = fopen("arc5.txt", "r")) != NULL) {
+        minymay(ar);    /* Llama a la función minymay */
+        fclose(ar);     /* Cierra el archivo */
+    } else {
+        printf("No se pudo abrir el archivo\n");
+    }
+}
+
+/* Función minymay */
+void minymay(FILE *arc) {
+    int min = 0, may = 0;
+    char p;
+
+    /* Lee caracteres del archivo hasta llegar al final */
+    while ((p = fgetc(arc)) != EOF) {
+        if (islower(p)) {
+            min++;  /* Incrementa el contador de minúsculas */
+        } else if (isupper(p)) {
+            may++;  /* Incrementa el contador de mayúsculas */
+        }
+    }
+
+    /* Imprime el número de minúsculas y mayúsculas */
+    printf("\nNúmero de minúsculas: %d\n", min);
+    printf("Número de mayúsculas: %d\n", may);
+}

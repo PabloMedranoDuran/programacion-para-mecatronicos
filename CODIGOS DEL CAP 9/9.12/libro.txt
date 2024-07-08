@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+/* Incorpora caracteres.
+   El programa agrega caracteres al archivo libro.txt. */
+void main(void) {
+    char p1;
+    FILE *ar;
+
+    ar = fopen("libro.txt", "a");  /* Abre el archivo en modo "append" */
+
+    if (ar != NULL) {
+        printf("Ingrese caracteres (presione Enter para finalizar):\n");
+
+        while ((p1 = getchar()) != '\n') {  /* Lee caracteres hasta presionar Enter */
+            fputc(p1, ar);  /* Escribe el caracter en el archivo */
+        }
+
+        fclose(ar);  /* Cierra el archivo después de escribir */
+    } else {
+        printf("No se puede abrir el archivo\n");
+    }
+}

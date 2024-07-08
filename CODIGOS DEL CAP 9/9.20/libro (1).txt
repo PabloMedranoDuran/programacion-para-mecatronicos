@@ -1,0 +1,87 @@
+#include <stdio.h>
+
+/* Structure definitions */
+typedef struct {
+    char materia[20];
+    int calificacion;
+} matcal;
+
+typedef struct {
+    int matricula;
+    char nombre[20];
+    matcal cal[5];  // Array of matcal structures
+} alumno;
+
+/* Function prototypes */
+void F1(FILE *);
+void F2(FILE *);
+float F3(FILE *);
+
+/* Main function */
+void main(void) {
+    float pro;
+    FILE *ap;
+    
+    /* Open the file for reading */
+    if ((ap = fopen("esc.dat", "rb")) != NULL) {
+        F1(ap);
+        F2(ap);
+        pro = F3(ap);
+        printf("\n\nPROMEDIO GENERAL MATERIA 4: %f", pro);
+        fclose(ap);  // Close the file
+    } else {
+        printf("\nEl archivo no se puede abrir");
+    }
+}
+
+/* Function to print matricula and average grades */
+void F1(FILE *ap) {
+    alumno alu;
+    int j;
+    float sum, pro;
+    
+    printf("\nMATRÍCULA y PROMEDIOS");
+    fread(&alu, sizeof(alumno), 1, ap);
+    while (!feof(ap)) {
+        printf("\nMatrícula: %d", alu.matricula);
+        sum = 0.0;
+        for (j = 0; j < 5; j++) {
+            sum += alu.cal[j].calificacion;
+        }
+        pro = sum / 5;
+        printf("\tPromedio: %f", pro);
+        fread(&alu, sizeof(alumno), 1, ap);
+    }
+}
+
+/* Function to print matricula of students with grade > 9 in materia 3 */
+void F2(FILE *ap) {
+    alumno alu;
+    
+    rewind(ap);
+    printf("\n\nALUMNOS CON CALIFICACIÓN > 9 EN MATERIA 3");
+    fread(&alu, sizeof(alumno), 1, ap);
+    while (!feof(ap)) {
+        if (alu.cal[2].calificacion > 9) {
+            printf("\nMatrícula del alumno: %d", alu.matricula);
+        }
+        fread(&alu, sizeof(alumno), 1, ap);
+    }
+}
+
+/* Function to calculate and return average grade for materia 4 */
+float F3(FILE *ap) {
+    alumno alu;
+    int i = 0;
+    float sum = 0, pro;
+    
+    rewind(ap);
+    fread(&alu, sizeof(alumno), 1, ap);
+    while (!feof(ap)) {
+        i++;
+        sum += alu.cal[3].calificacion;  // Sum of calificacion for materia 4
+        fread(&alu, sizeof(alumno), 1, ap);
+    }
+    pro = sum / i;  // Average grade for materia 4
+    return pro;
+}

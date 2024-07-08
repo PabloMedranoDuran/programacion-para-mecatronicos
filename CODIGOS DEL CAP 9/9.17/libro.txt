@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+/* Function prototype */
+void cambia(FILE *, FILE *);
+
+/* Main function */
+void main(void) {
+    FILE *ar, *ap;
+    
+    /* Open the input file "arc.txt" for reading */
+    ar = fopen("arc.txt", "r");
+    if (ar == NULL) {
+        printf("No se puede abrir el archivo de entrada\n");
+        return;
+    }
+    
+    /* Open the output file "arc1.txt" for writing */
+    ap = fopen("arc1.txt", "w");
+    if (ap == NULL) {
+        printf("No se puede abrir el archivo de salida\n");
+        fclose(ar);
+        return;
+    }
+    
+    /* Call the function to replace "méxico" with "México" */
+    cambia(ar, ap);
+    
+    /* Close both files */
+    fclose(ar);
+    fclose(ap);
+}
+
+/* Function to replace "méxico" with "México" */
+void cambia(FILE *ap1, FILE *ap2) {
+    char cad[100];  /* Increased buffer size for reading lines */
+    char *cad1, *cad2;
+    const char *buscar = "méxico";
+    const char *reemplazar = "México";
+    
+    while (fgets(cad, sizeof(cad), ap1) != NULL) {
+        cad1 = cad; /* Initialize cad1 with cad */
+        
+        /* Search for "méxico" in the current line */
+        while ((cad2 = strstr(cad1, buscar)) != NULL) {
+            /* Replace "méxico" with "México" */
+            strncpy(cad2, reemplazar, strlen(reemplazar));
+            cad1 = cad2 + strlen(reemplazar); /* Move cad1 past the replaced word */
+        }
+        
+        /* Write the modified line to the output file */
+        fputs(cad, ap2);
+    }
+}
